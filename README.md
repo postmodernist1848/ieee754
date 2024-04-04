@@ -13,3 +13,13 @@ g++ example.cpp ieee754.cpp -o example
 - Addition, subtraction, multiplication and division operations
 - Float<>::from_uint() - Float type from IEEE754 format representation
 - Print floats (similarly to %a format specifier in printf)
+
+### Tests
+To test operations with [Berkeley TestFloat](http://www.jhauser.us/arithmetic/TestFloat.html):
+```
+./test.sh 0 # required executables: testfloat_gen, testfloat_ver
+```
+To test print():
+```
+./test.sh 1 # ver.py compares against printf's %a output
+```
