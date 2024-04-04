@@ -192,7 +192,7 @@ Float<T, EBITS, MBITS> Float<T, EBITS, MBITS>::add(Float<T, EBITS, MBITS> a, Flo
 	am |= (1 << MBITS);
 	bm |= (1 << MBITS);
 
-	if ((uint32_t)(ae - be) > MBITS + 2)
+	if ((uint32_t)(ae - be) > MBITS + 1)
 	{
 		int32_t res_exp = ae;
 		uint64_t resm = am;
@@ -204,8 +204,8 @@ Float<T, EBITS, MBITS> Float<T, EBITS, MBITS>::add(Float<T, EBITS, MBITS> a, Flo
 		}
 		else
 		{
-			resm -= 1;	  // borrowing for subtraction of small b
-						  // Ex: case of ae - be == 25:
+			resm -= 1;	  // Borrowing for subtraction of small b
+						  // Ex: ae - be > 25:
 						  //
 						  //            this '1' is borrowed
 						  //             \/
@@ -219,6 +219,19 @@ Float<T, EBITS, MBITS> Float<T, EBITS, MBITS>::add(Float<T, EBITS, MBITS> a, Flo
 						  //          2) sticky_bit == 1
 						  //
 
+            // Ex: ae - be == 25 edge case where first_rounded_bit == 0
+            // Fix: change condition to (ae - be > 25)
+            // 1000000000000000000000000000000000000000000000000
+            // 0000000000000000000000000100000000000000000000001
+            //
+            // 0111111111111111111111111011111111111111111111111
+            // << 1
+            // 1111111111111111111111110111111111111111111111110
+            //                         ^
+            //                         first_rounded_bit == 0
+
+
+            // can result in 0.11111...
 			// 0b100000000000000000000000 * 2**26 - 0b1
 			// 10000000000000000000000000000000000000000000000000
 			//                                                  1
