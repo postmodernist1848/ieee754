@@ -459,7 +459,7 @@ Float<T, EBITS, MBITS> Float<T, EBITS, MBITS>::div(Float<T, EBITS, MBITS> a, Flo
 	}
 	else
 	{
-		resm <<= 1;
+		resm <<= 1; // shift left to make space for sticky bit
 		res_exp--;
 		sticky_bit |= first_rounded_bit;
 		resm |= sticky_bit;	   // save sticky bit as last bit which is going to be shifted anyway
